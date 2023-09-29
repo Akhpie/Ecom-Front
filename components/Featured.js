@@ -9,6 +9,8 @@ import Stack from "@mui/material/Stack";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { ProductionQuantityLimits } from "@mui/icons-material";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 
 const Bg = styled.div`
   background-color: #222;
@@ -86,6 +88,11 @@ const Wrapper = styled.div`
 const ContentWrapper = styled.div``;
 
 export default function Featured({ product }) {
+  const { addProduct } = useContext(CartContext);
+  function addFeaturedToCart() {
+    addProduct(product._id);
+  }
+
   return (
     <Bg>
       <Center>
@@ -109,6 +116,7 @@ export default function Featured({ product }) {
                   variant="contained"
                   color="success"
                   endIcon={<AddShoppingCartIcon />}
+                  onClick={addFeaturedToCart}
                 >
                   Add to cart
                 </Button>

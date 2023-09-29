@@ -1,9 +1,15 @@
+// the top section for the home page
+
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Link from "next/link";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
+
 const ProductWrapper = styled.div``;
 
-const WhiteBox = styled.div`
+const WhiteBox = styled(Link)`
   background-color: #fff;
   padding: 20px;
   height: 120px;
@@ -14,14 +20,16 @@ const WhiteBox = styled.div`
   justify-content: center;
   img {
     max-width: 100%;
-    max-height: 80px;
+    max-height: 120px;
   }
 `;
 
-const Title = styled.h2`
+const Title = styled(Link)`
   font-weight: normal;
   font-size: 0.9rem;
   margin: 0;
+  color: inherit;
+  text-decoration: none;
 `;
 
 const ProductInfoBox = styled.div`
@@ -51,24 +59,28 @@ const Price = styled.div`
 `;
 
 export default function ProductBox({ _id, title, description, price, images }) {
+  const url = "/product/" + _id;
+  const { addProduct } = useContext(CartContext);
+
   return (
     <ProductWrapper>
-      <WhiteBox>
+      <WhiteBox href={url}>
         <div>
           <img src={images[0]} alt="" />
         </div>
       </WhiteBox>
       <ProductInfoBox>
-        <Title>{title}</Title>
+        <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>
             <div>${price}</div>
           </Price>
           <Button
             size="small"
-            variant="contained"
-            color="info"
+            variant="outlined"
+            color="success"
             style={{ minWidth: "20px", minHeight: "20px", padding: "4px" }}
+            onClick={() => addProduct(_id)}
           >
             <ShoppingCartIcon />
           </Button>
