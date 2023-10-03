@@ -1,20 +1,30 @@
-import {MoonLoader} from "react-spinners";
 import styled from "styled-components";
 
-const Wrapper = styled.div`
-  ${props => props.fullWidth ? `
-    display:block;
-    display:flex;
-    justify-content:center;
+const StyledTabs = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+const StyledTab = styled.span`
+  font-size: 1.5rem;
+  cursor: pointer;
+  ${props => props.active ? `
+    color:black;
+    border-bottom: 2px solid black;
   ` : `
-    border: 5xp solid blue;
+    color:#999;
   `}
 `;
 
-export default function Spinner({fullWidth}) {
+export default function Tabs({tabs,active,onChange}) {
   return (
-    <Wrapper fullWidth={fullWidth}>
-      <MoonLoader speedMultiplier={1} color={'#36d7b7'} />
-    </Wrapper>
+    <StyledTabs>
+      {tabs.map(tabName => (
+        <StyledTab
+          onClick={() => { onChange(tabName) }}
+          active={tabName === active}
+        >{tabName}</StyledTab>
+      ))}
+    </StyledTabs>
   );
 }

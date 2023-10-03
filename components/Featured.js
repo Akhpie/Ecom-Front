@@ -11,6 +11,7 @@ import ReadMoreIcon from "@mui/icons-material/ReadMore";
 import { ProductionQuantityLimits } from "@mui/icons-material";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import { RevealWrapper } from "next-reveal";
 
 const Bg = styled.div`
   background-color: #222;
@@ -99,33 +100,41 @@ export default function Featured({ product }) {
         <ColumnsWrapper>
           <Column>
             <div>
-              <Title>{product.title}</Title>
-              <Desc>{product.description}</Desc>
-              <Stack spacing={2} direction="row">
-                <Button
-                  size="small"
-                  variant="outlined"
-                  color="info"
-                  endIcon={<ReadMoreIcon />}
-                  href={"/products" + product._id}
-                >
-                  Read more
-                </Button>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="success"
-                  endIcon={<AddShoppingCartIcon />}
-                  onClick={addFeaturedToCart}
-                >
-                  Add to cart
-                </Button>
-              </Stack>
+              <RevealWrapper origin={"left"} delay={0}>
+                <ContentWrapper>
+                  <Title>{product.title}</Title>
+                  <Desc>{product.description}</Desc>
+                  <Stack spacing={2} direction="row">
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      color="info"
+                      endIcon={<ReadMoreIcon />}
+                      href={"/products" + product._id}
+                    >
+                      Read more
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="success"
+                      endIcon={<AddShoppingCartIcon />}
+                      onClick={addFeaturedToCart}
+                    >
+                      Add to cart
+                    </Button>
+                  </Stack>
+                </ContentWrapper>
+              </RevealWrapper>
             </div>
           </Column>
-          <Column>
-            <img src="https://aks-next-ecom.s3.amazonaws.com/1695446991122.png" />
-          </Column>
+          <ImgColumn>
+            <RevealWrapper delay={0}>
+              <CenterImg>
+                <img src="https://aks-next-ecom.s3.amazonaws.com/1695446991122.png" />
+              </CenterImg>
+            </RevealWrapper>
+          </ImgColumn>
         </ColumnsWrapper>
       </Center>
     </Bg>
