@@ -1,5 +1,9 @@
+// image magnification
+
 import styled from "styled-components";
 import { useState } from "react";
+import ReactImageMagnify from "react-image-magnify";
+import LoupeIcon from "@mui/icons-material/Loupe";
 
 const Image = styled.img`
   max-width: 100%;
@@ -36,10 +40,40 @@ const BigImageWrapper = styled.div`
 
 export default function ProductImages({ images }) {
   const [activeImage, setActiveImage] = useState(images?.[0]);
+
   return (
     <>
       <BigImageWrapper>
-        <BigImage src={activeImage} />
+        <ReactImageMagnify
+          {...{
+            smallImage: {
+              alt: "Product Image",
+              isFluidWidth: true,
+              src: activeImage,
+            },
+            largeImage: {
+              src: activeImage,
+              width: 800,
+              height: 800,
+            },
+            lensStyle: {
+              backgroundColor: "rgba(0,0,0,0.1)",
+            },
+            isHintEnabled: true,
+            enlargedImageContainerDimensions: {
+              width: "100%", // Customize the width of the enlarged image container
+              height: "100%", // Customize the height of the enlarged image container
+            },
+            enlargedImageContainerStyle: {
+              border: "2px solid #ddd",
+              borderRadius: "8px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              padding: "90px",
+              backgroundColor: "#fff",
+              zIndex: "1000", // Ensure the container is above other elements
+            },
+          }}
+        />
       </BigImageWrapper>
       <ImageButtons>
         {images.map((image) => (

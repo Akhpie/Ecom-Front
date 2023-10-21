@@ -56,6 +56,7 @@ export default function AccountPage() {
   const [activeTab, setActiveTab] = useState("Orders");
   const [orders, setOrders] = useState([]);
   const [orderLoaded, setOrderLoaded] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
 
   async function logout() {
     await signOut({
@@ -68,6 +69,7 @@ export default function AccountPage() {
   function saveAddress() {
     const data = { name, email, city, streetAddress, postalCode, country };
     axios.put("/api/address", data);
+    alert("Account details saved and updated successfully!");
   }
   useEffect(() => {
     if (!session) {
@@ -78,13 +80,17 @@ export default function AccountPage() {
     setOrderLoaded(false);
 
     axios.get("/api/address").then((response) => {
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setCity(response.data.city);
-      setPostalCode(response.data.postalCode);
-      setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
-      setAddressLoaded(true);
+      try {
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setCity(response.data.city);
+        setPostalCode(response.data.postalCode);
+        setStreetAddress(response.data.streetAddress);
+        setCountry(response.data.country);
+        setAddressLoaded(true);
+      } catch (err) {
+        console.error(err);
+      }
     });
     axios.get("/api/wishlist").then((response) => {
       setWishedProducts(response.data.map((wp) => wp.product));
@@ -114,19 +120,14 @@ export default function AccountPage() {
                   active={activeTab}
                   onChange={setActiveTab}
                 />
-                  {activeTab === 'Orders' && (
+                {activeTab === "Orders" && (
                   <>
-                    {!orderLoaded && (
-                      <Spinner fullWidth={true} />
-                    )}
+                    {!orderLoaded && <Spinner fullWidth={true} />}
                     {orderLoaded && (
                       <div>
-                        {orders.length === 0 && (
-                          <p>Login to see your orders</p>
-                        )}
-                        {orders.length > 0 && orders.map(o => (
-                          <SingleOrder {...o} />
-                        ))}
+                        {orders.length === 0 && <p>Login to see your orders</p>}
+                        {orders.length > 0 &&
+                          orders.map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}
                   </>
@@ -134,9 +135,7 @@ export default function AccountPage() {
 
                 {activeTab === "Wishlist" && (
                   <>
-                    {!wishlistLoaded && 
-                    (<Spinner fullWidth={true} />
-                  )}
+                    {!wishlistLoaded && <Spinner fullWidth={true} />}
                     {wishlistLoaded && (
                       <>
                         <WishedProductsGrid>
@@ -148,10 +147,11 @@ export default function AccountPage() {
                                 wished={true}
                                 onRemoveFromWishlist={
                                   productRemovedFromWishlist
-                                }/>
-                                ))}
-                          </WishedProductsGrid>
-                            
+                                }
+                              />
+                            ))}
+                        </WishedProductsGrid>
+
                         {wishedProducts.length === 0 && (
                           <>
                             {session && <p>Your wishlist is empty</p>}
@@ -254,5 +254,3 @@ export default function AccountPage() {
     </>
   );
 }
-
-

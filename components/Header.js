@@ -1,11 +1,10 @@
 import Link from "next/link";
 import styled from "styled-components";
-import Center from "./Center";
-import { useContext } from "react";
-import { CartContext } from "./CartContext";
-import SearchIcon from '@mui/icons-material/Search';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState, useEffect } from "react";
+import Center from "@/components/Center";
+import { useContext, useState, useEffect } from "react";
+import { CartContext } from "@/components/CartContext";
+import BarsIcon from "@/components/icons/Bars";
+import SearchIcon from "@/components/icons/SearchIcon";
 
 const StyledHeader = styled.header`
   background-color: #222;
@@ -19,23 +18,44 @@ const StyledHeader = styled.header`
 
   /* Add a class when scrolled to make the box shadow appear */
   &.scrolled {
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px rgba(0, 250, 250, 0.3);
   }
 `;
-
 const Logo = styled(Link)`
   color: #fff;
   text-decoration: none;
   position: relative;
   z-index: 3;
+  font-size: 24px;
 `;
-
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 20px 0;
 `;
-
+const StyledNav = styled.nav`
+  ${(props) =>
+    props.mobileNavActive
+      ? `
+    display: block;
+  `
+      : `
+    display: none;
+  `}
+  gap: 15px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 70px 20px 20px;
+  background-color: #222;
+  @media screen and (min-width: 768px) {
+    display: flex;
+    position: static;
+    padding: 0;
+  }
+`;
 const NavLink = styled(Link)`
   display: block;
   color: #aaa;
@@ -43,6 +63,7 @@ const NavLink = styled(Link)`
   min-width: 30px;
   padding: 10px 0;
   position: relative;
+  font-size: 20px;
 
   &:hover {
     color: #007bff;
@@ -50,7 +71,7 @@ const NavLink = styled(Link)`
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
@@ -74,28 +95,19 @@ const NavLink = styled(Link)`
     padding: 0;
   }
 `;
-
-const StyledNav = styled.nav`
-  ${props => props.mobileNavActive ? `
-    display: block;
-  ` : `
-    display: none;
-  `}
-  gap: 15px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 70px 20px 20px;
-  background-color: #222;
+const NavButton = styled.button`
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
   @media screen and (min-width: 768px) {
-    display: flex;
-    position: static;
-    padding: 0;
+    display: none;
   }
 `;
-
 const SideIcons = styled.div`
   display: flex;
   align-items: center;
@@ -111,19 +123,6 @@ const SideIcons = styled.div`
   }
 `;
 
-const NavButton = styled.button`
-  background-color: transparent;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  color: white;
-  cursor: pointer;
-  position: relative;
-  z-index: 3;
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
-`;
 export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
@@ -131,16 +130,16 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
-        document.querySelector('header').classList.add('scrolled');
+        document.querySelector("header").classList.add("scrolled");
       } else {
-        document.querySelector('header').classList.remove('scrolled');
+        document.querySelector("header").classList.remove("scrolled");
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -148,7 +147,7 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={"/"}>Ecomerce</Logo>
+          <Logo href={"/"}>Ecommerce</Logo>
           <StyledNav mobileNavActive={mobileNavActive}>
             <NavLink href={"/"}>Home</NavLink>
             <NavLink href={"/products"}>All products</NavLink>
@@ -157,10 +156,12 @@ export default function Header() {
             <NavLink href={"/cart"}>Cart ({cartProducts.length})</NavLink>
           </StyledNav>
           <SideIcons>
-          <Link href={'/search'}><SearchIcon /></Link>
-          <NavButton onClick={() => setMobileNavActive(prev => !prev)}>
-              <MenuIcon />
-          </NavButton>
+            <Link href={"/search"}>
+              <SearchIcon />
+            </Link>
+            <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
+              <BarsIcon />
+            </NavButton>
           </SideIcons>
         </Wrapper>
       </Center>

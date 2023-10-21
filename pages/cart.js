@@ -1,4 +1,3 @@
-// import Button from "@/components/Button";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
@@ -92,7 +91,7 @@ const CityHolder = styled.div`
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -101,6 +100,7 @@ export default function CartPage() {
   const [streetAddress, setStreetAddress] = useState("");
   const [country, setCountry] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [shippingFee, setShippingFee] = useState(null);
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post("/api/cart", { ids: cartProducts }).then((response) => {
@@ -118,33 +118,29 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
+    axios.get("/api/settings?name=shippingFee").then((res) => {
+      setShippingFee(res.data.value);
+    });
   }, []);
 
-  // useEffect(()=>{
-  //   axios.get('/api/address').then(response =>{
-  //     setName(response.data.name);
-  //     setEmail(response.data.email);
-  //     setCity(response.data.city);
-  //     setPostalCode(response.data.postalCode);
-  //     setStreetAddress(response.data.streetAddress);
-  //     setCountry(response.data.country);
-  //   })
-  // })
-
   useEffect(() => {
-    if(!session){
+    if (!session) {
       return;
     }
-    axios.get('/api/address').then(response => {
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setCity(response.data.city);
-      setPostalCode(response.data.postalCode);
-      setStreetAddress(response.data.streetAddress);
-      setCountry(response.data.country);
+    axios.get("/api/address").then((response) => {
+      try {
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setCity(response.data.city);
+        setPostalCode(response.data.postalCode);
+        setStreetAddress(response.data.streetAddress);
+        setCountry(response.data.country);
+      } catch (e) {
+        console.error(e);
+      }
     });
-  }, [session])
-  
+  }, [session]);
+
   function moreOfThisProduct(id) {
     addProduct(id);
   }
@@ -212,10 +208,18 @@ export default function CartPage() {
                           <ProductImageBox>
                             <img src={product.images[0]}></img>
                           </ProductImageBox>
-                          {product.title}
+                          <div
+                            style={{
+                              marginTop: "5px",
+                              fontWeight: "500",
+                            }}
+                          >
+                            {product.title}
+                          </div>
                         </ProductInfoCell>
                         <td>
                           <Button
+                            style={{ padding: "4px 8px" }}
                             size="small"
                             variant="outlined"
                             color="secondary"
@@ -239,16 +243,23 @@ export default function CartPage() {
                           </Button>
                         </td>
                         <td>
-                          $
+                          ₹
                           {cartProducts.filter((id) => id === product._id)
                             .length * product.price}
                         </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td>${total}</td>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Products</td>
+                      <td>₹{total}</td>
+                    </tr>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Shipping</td>
+                      <td>₹{shippingFee}</td>
+                    </tr>
+                    <tr className="subtotal total">
+                      <td colSpan={2}>Total</td>
+                      <td>₹{total + parseInt(shippingFee || 0)}</td>
                     </tr>
                   </tbody>
                 </Table>
