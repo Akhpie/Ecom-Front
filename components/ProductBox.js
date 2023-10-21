@@ -165,11 +165,11 @@ const ProductWrapper = styled.div`
     text-align: center;
     justify-content: center;
   }
-  transition: transform 0.2s;
+  // transition: transform 0.2s;
 
-  &:hover {
-    transform: translateY(-10px);
-  }
+  // &:hover {
+  //   transform: translateY(-10px);
+  // }
 `;
 
 const WhiteBox = styled(Link)`

@@ -54,6 +54,8 @@
 //   );
 // }
 
+// the ORDERS of the cutomer are stored here
+
 import styled from "styled-components";
 
 const StyledOrder = styled.div`
@@ -66,9 +68,29 @@ const StyledOrder = styled.div`
   background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+  cursor: pointer;
+  transform-origin: center;
+  transform: perspective(500px) rotateX(0);
+  backface-visibility: hidden;
 
   &:not(:last-child) {
     margin-bottom: 20px;
+  }
+
+  &:hover {
+    animation: tilt 1s alternate;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to right, #d5d5d5, white 100%, grey);
+  }
+
+  @keyframes tilt {
+    0% {
+      transform: perspective(900px) rotateX(0deg);
+    }
+    100% {
+      transform: perspective(500px) rotateX(5deg);
+    }
   }
 `;
 
